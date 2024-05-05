@@ -7,7 +7,8 @@
     <title>Análise de Jogos de Futebol</title>
     <!-- Adicione o link para o arquivo de estilo do Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Se você tiver um arquivo de estilo personalizado, você também pode adicioná-lo aqui -->
+    <!-- Adicione o link para a biblioteca Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="bg-gray-100">
@@ -23,11 +24,17 @@
         </nav>
     </header>
 
-     <!-- Corpo -->
-     <main class="container mx-auto p-4">
+    <!-- Corpo -->
+    <main class="container mx-auto p-4">
         <section class="mb-8">
             <h1 class="text-3xl font-bold">Bem-vindo ao Site de Análise de Jogos de Futebol</h1>
             <p class="mt-4">Aqui você encontrará análises detalhadas de jogos, estatísticas de jogadores e equipes, previsões de resultados e muito mais!</p>
+        </section>
+
+        <!-- Seção de Estatísticas do Jogo -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Estatísticas do Jogo</h2>
+            <div id="statsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
         <!-- Seção de Análise de Jogos -->
@@ -67,13 +74,79 @@
                 </tbody>
             </table>
         </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Gráfico de Estatísticas: Número de Gols Marcados</h2>
+            <!-- Canvas para o gráfico -->
+            <canvas id="golsChart" width="400" height="200"></canvas>
+        </section>
     </main>
 
-    <!-- Rodapé -->
-    <footer class="bg-gray-900 text-white p-4">
-        <p>&copy; 2024 Site de Análise de Jogos de Futebol. Todos os direitos reservados.</p>
-    </footer>
+    <!-- JavaScript para gerar dados de exemplo e exibir na página -->
+    <script>
+        // Função para gerar dados de exemplo das estatísticas do jogo
+        function gerarDadosExemplo() {
+            // Dados de exemplo para as estatísticas do jogo
+            const estatisticas = [
+                { nome: "Posse de Bola", valor: "60%" },
+                { nome: "Chutes a Gol", valor: "8" },
+                { nome: "Chutes Fora do Alvo", valor: "3" },
+                { nome: "Faltas Cometidas", valor: "12" },
+                { nome: "Cartões Amarelos", valor: "2" },
+                { nome: "Cartões Vermelhos", valor: "0" }
+            ];
 
+            // Selecionar o contêiner de estatísticas na página
+            const statsContainer = document.getElementById("statsContainer");
+
+            // Limpar qualquer conteúdo existente no contêiner
+            statsContainer.innerHTML = "";
+
+            // Adicionar cada estatística como um card na página
+            estatisticas.forEach(stat => {
+                const statCard = `
+                <div class="bg-white shadow-md rounded-md p-4">
+                    <h3 class="text-xl font-bold mb-2">${stat.nome}</h3>
+                    <p>${stat.valor}</p>
+                </div>
+            `;
+                statsContainer.innerHTML += statCard;
+            });
+        }
+
+        // Chamar a função para gerar os dados de exemplo ao carregar a página
+        gerarDadosExemplo();
+
+        // Dados de exemplo (número de gols marcados em cada jogo)
+        const dadosGols = [2, 1, 3, 0, 2, 1];
+
+        // Labels para o eixo X (número de jogos)
+        const labels = Array.from({ length: dadosGols.length }, (_, i) => `Jogo ${i + 1}`);
+
+        // Contexto do canvas
+        const ctx = document.getElementById('golsChart').getContext('2d');
+
+        // Criação do gráfico
+        const golsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Número de Gols Marcados',
+                    data: dadosGols,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 
 </body>
 
